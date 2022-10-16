@@ -247,7 +247,7 @@ Save settings
 ![](media/20221016153832.png)    
 ```
 export TFC_ADDRESS="https://patrick-tfe6.bg.hashicorp-success.com"
-export TFC_AGENT_TOKEN=fM8iHZGm4kjHmA.atlasv1.CSNxXzjpumdviXdTLC2evYVKR8rgdcxEgBdzYP8gkQOHrh65BM4uWCaAGtwyznUH6QA
+export TFC_AGENT_TOKEN=fM8iHZGm4kjHmA.atlasv1.CSNxXzjpumdviXdTLC
 export TFC_AGENT_NAME=patrick-agent1
 ```
 - Click finish
@@ -279,7 +279,7 @@ unzip tfc-agent_1.4.0_linux_amd64.zip  -d /opt/tfe-agent
 
 ```
 export TFC_ADDRESS="https://patrick-tfe6.bg.hashicorp-success.com"
-export TFC_AGENT_TOKEN=fM8iHZGm4kjHmA.atlasv1.CSNxXzjpumdviXdTLC2evYVKR8rgdcxEgBdzYP8gkQOHrh65BM4uWCaAGtwyznUH6QA
+export TFC_AGENT_TOKEN=fM8iHZGm4kjHmA.atlasv1.CSNxXzjpumdviXdTLC2ev
 export TFC_AGENT_NAME=patrick-agent1
 /opt/tfe-agent/tfc-agent
 ```
@@ -345,7 +345,7 @@ Description=TFE agent
 [Service]
 Type=simple
 Environment="TFC_ADDRESS=https://patrick-tfe6.bg.hashicorp-success.com"
-Environment="TFC_AGENT_TOKEN=fM8iHZGm4kjHmA.atlasv1.CSNxXzjpumdviXdTLC2evYVKR8rgdcxEgBdzYP8gkQOHrh65BM4uWCaAGtwyznUH6QA"
+Environment="TFC_AGENT_TOKEN=fM8iHZGm4kjHmA.atlasv1.CSNxXzjpumdviXdTLC2evYVKR8rgdcxEgBdzYP"
 Environment="TFC_AGENT_NAME=patrick-agent1"
 User=root
 WorkingDirectory=/opt/tfe-agent
