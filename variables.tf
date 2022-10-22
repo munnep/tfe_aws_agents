@@ -6,6 +6,10 @@ variable "region" {
   description = "region to create the environment"
 }
 
+variable "agent_token" {
+  description = "agent secret token"
+}
+
 variable "vpc_cidr" {
   description = "which private subnet do you want to use for the VPC. Subnet mask of /16"
 }

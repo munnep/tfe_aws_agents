@@ -376,7 +376,7 @@ resource "aws_instance" "tfe_server" {
     rds_password       = var.rds_password
     tfe_bucket         = "${var.tag_prefix}-bucket"
     region             = var.region
-    certificate_email = var.certificate_email
+    certificate_email  = var.certificate_email
   })
 
   tags = {

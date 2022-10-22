@@ -6,8 +6,8 @@ write_files:
       
       [Service]
       Type=simple
-      Environment="TFC_ADDRESS=https://patrick-tfe6.bg.hashicorp-success.com"
-      Environment="TFC_AGENT_TOKEN=fM8iHZGm4kjHmA.atlasv1.CSNxXzjpumdviXdTLC2evYVKR8rgdcxEgBdzYP"
+      Environment="TFC_ADDRESS=https://${dns_hostname}.${dns_zonename}.com"
+      Environment="TFC_AGENT_TOKEN=${agent_token}"
       Environment="TFC_AGENT_NAME=patrick-agent1"
       User=root
       WorkingDirectory=/opt/tfe-agent
@@ -24,6 +24,10 @@ write_files:
 runcmd:
   - sudo curl https://releases.hashicorp.com/tfc-agent/1.4.0/tfc-agent_1.4.0_linux_amd64.zip --output /tmp/tfc-agent_1.4.0_linux_amd64.zip 
   - sudo mkdir -p /opt/tfe-agent
+  - sudo apt-get update
   - sudo apt-get install unzip
   - sudo unzip /tmp/tfc-agent_1.4.0_linux_amd64.zip  -d /opt/tfe-agent
+  - sudo systemctl daemon-reload
+  - sudo systemctl start tfe-agent.service
+  - sudo systemctl enable tfe-agent.service
 packages_update: true  
