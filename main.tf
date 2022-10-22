@@ -64,9 +64,47 @@ resource "aws_route_table" "publicroutetable" {
   }
 }
 
+resource "aws_route_table" "privateroutetable" {
+  vpc_id = aws_vpc.main.id
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.NAT.id
+  }
+
+  tags = {
+    Name = "${var.tag_prefix}-route-table-nat"
+  }
+
+}
+
 resource "aws_route_table_association" "PublicRT1" {
   subnet_id      = aws_subnet.public1.id
   route_table_id = aws_route_table.publicroutetable.id
+}
+
+resource "aws_eip" "nateIP" {
+  vpc = true
+}
+
+
+
+resource "aws_nat_gateway" "NAT" {
+  allocation_id = aws_eip.nateIP.id
+  subnet_id     = aws_subnet.public1.id
+
+  tags = {
+    Name = "${var.tag_prefix}-nat"
+  }
+}
+
+resource "aws_route_table_association" "PrivateRT1" {
+  subnet_id      = aws_subnet.private1.id
+  route_table_id = aws_route_table.privateroutetable.id
+}
+
+resource "aws_route_table_association" "PrivateRT2" {
+  subnet_id      = aws_subnet.private2.id
+  route_table_id = aws_route_table.privateroutetable.id
 }
 
 

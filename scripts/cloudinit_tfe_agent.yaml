@@ -6,9 +6,9 @@ write_files:
       
       [Service]
       Type=simple
-      Environment="TFC_ADDRESS=https://${dns_hostname}.${dns_zonename}.com"
+      Environment="TFC_ADDRESS=https://${dns_hostname}.${dns_zonename}"
       Environment="TFC_AGENT_TOKEN=${agent_token}"
-      Environment="TFC_AGENT_NAME=patrick-agent1"
+      Environment="TFC_AGENT_NAME=INSTANCE_ID_WILL_BE_PLACED_HERE"
       User=root
       WorkingDirectory=/opt/tfe-agent
       ExecStart=/opt/tfe-agent/tfc-agent
@@ -22,12 +22,14 @@ write_files:
     permissions: '0750'
     path: /etc/systemd/system/tfe-agent.service
 runcmd:
-  - sudo curl https://releases.hashicorp.com/tfc-agent/1.4.0/tfc-agent_1.4.0_linux_amd64.zip --output /tmp/tfc-agent_1.4.0_linux_amd64.zip 
-  - sudo mkdir -p /opt/tfe-agent
-  - sudo apt-get update
-  - sudo apt-get install unzip
-  - sudo unzip /tmp/tfc-agent_1.4.0_linux_amd64.zip  -d /opt/tfe-agent
-  - sudo systemctl daemon-reload
-  - sudo systemctl start tfe-agent.service
-  - sudo systemctl enable tfe-agent.service
+  - curl https://releases.hashicorp.com/tfc-agent/1.4.0/tfc-agent_1.4.0_linux_amd64.zip --output /tmp/tfc-agent_1.4.0_linux_amd64.zip 
+  - mkdir -p /opt/tfe-agent
+  - apt-get update
+  - apt-get install unzip
+  - unzip /tmp/tfc-agent_1.4.0_linux_amd64.zip  -d /opt/tfe-agent
+  - export INSTANCE_ID=`curl http://169.254.169.254/latest/meta-data/instance-id`
+  - sed -i "s/INSTANCE_ID_WILL_BE_PLACED_HERE/$INSTANCE_ID/g" /etc/systemd/system/tfe-agent.service
+  - systemctl daemon-reload
+  - systemctl start tfe-agent
+  - systemctl enable tfe-agent.service
 packages_update: true  

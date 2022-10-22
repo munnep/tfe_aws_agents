@@ -58,3 +58,15 @@ variable "dns_zonename" {
 variable "certificate_email" {
   description = "email address to register the certificate"
 }
+
+variable "asg_min_size" {
+  description = "Autoscaling group minimal size"
+}
+
+variable "asg_max_size" {
+  description = "Autoscaling group maximal size"
+}
+
+variable "asg_desired_capacity" {
+  description = "Autoscaling group running number of instances"
+}
