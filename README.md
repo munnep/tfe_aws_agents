@@ -137,6 +137,10 @@ https://patrick-tfe6.bg.hashicorp-success.com
 - Go to settings -> Agents  
 
 ![](media/20221023131924.png)    
+- Remove everything by using terraform destroy
+```
+terraform destroy
+```
 
 ## Testing the agents
 
