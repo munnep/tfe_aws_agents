@@ -172,10 +172,10 @@ write_files:
       done
       # get the admin token you can user to create the first user
       ADMIN_TOKEN=`sudo /usr/local/bin/replicated admin --tty=0 retrieve-iact | tr -d '\r'`
-      echo ADMIN_TOKEN $ADMIN_TOKEN
+      # echo ADMIN_TOKEN $ADMIN_TOKEN
       # Create the first user called admin and get the token
       TOKEN=`curl --header "Content-Type: application/json" --request POST --data '{"username": "admin", "email": "${certificate_email}", "password": "${tfe_password}"}' \ --url https://${dns_hostname}.${dns_zonename}/admin/initial-admin-user?token=$ADMIN_TOKEN | jq '.token' | tr -d '"'`
-      echo TOKEN $TOKEN
+      # echo TOKEN $TOKEN
       # create the organization called test
       curl \
         --header "Authorization: Bearer $TOKEN" \
@@ -185,8 +185,12 @@ write_files:
         https://${dns_hostname}.${dns_zonename}/api/v2/organizations
       # Create an agent pool
       export AGENT_POOL=`curl --header "Authorization: Bearer $TOKEN" --header "Content-Type: application/vnd.api+json" --request POST --data '{"data": {"type": "agent-pools", "attributes": { "name": "test-pool", "organization-scoped": true}}}' https://${dns_hostname}.${dns_zonename}/api/v2/organizations/test/agent-pools | jq '.data.relationships."authentication-tokens".links.related' | tr -d '"'`
+      # Create a workspace
+      export AGENT_POOL_ID=`curl --header "Authorization: Bearer $TOKEN" --header "Content-Type: application/vnd.api+json" --request GET https://patrick-tfe6.bg.hashicorp-success.com/api/v2/organizations/test/agent-pools | jq '.data[0].id' | tr -d '"'`
+      curl --header "Authorization: Bearer $TOKEN" --header "Content-Type: application/vnd.api+json" --request POST --data '{"data": {"attributes": {"name":"test-agent","execution-mode": "agent", "agent-pool-id": "'$AGENT_POOL_ID'","resource-count": 0,"updated-at": "2017-11-29T19:18:09.976Z"}},"type": "workspaces"}' https://patrick-tfe6.bg.hashicorp-success.com/api/v2/organizations/test/workspaces
+      # Create an agent token
       export AGENT_TOKEN=`curl --header "Authorization: Bearer $TOKEN" --header "Content-Type: application/vnd.api+json" --request POST --data '{"data": {"type": "authentication-tokens","attributes": {"description":"api"}}}' https://${dns_hostname}.${dns_zonename}/$AGENT_POOL | jq '.data.attributes.token' | tr -d '"'`
-      echo AGENT_TOKEN=$AGENT_TOKEN
+      echo Use this in your Terraform variables as a value for AGENT_TOKEN=$AGENT_TOKEN
     permissions: '0777'
     path: /tmp/tfe_setup.sh 
   - content: |
