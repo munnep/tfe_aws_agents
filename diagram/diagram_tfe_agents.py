@@ -9,7 +9,7 @@ from diagrams.aws.database import ElasticacheForRedis
 # Variables
 title = "VPC with 1 public subnet for the TFE server and\n 2 private subnet in different AZ for the PostgreSQL instance requirement.\n Autoscaling group with TFE agents"
 outformat = "png"
-filename = "diagram-airgap"
+filename = "diagram_tfe_agents"
 direction = "TB"
 
 
@@ -39,8 +39,7 @@ with Diagram(
                 # Subcluster 
                 with Cluster("subnet_public1"):
                      ec2_tfe_server = EC2("TFE_server")
-                     ec2_tf_client = EC2("TF_client")
-                # Subcluster
+                   # Subcluster
                 with Cluster("subnet_private1"):
                     with Cluster("DB subnet"):
                         postgresql = RDSPostgresqlInstance("RDS Instance")
@@ -50,9 +49,7 @@ with Diagram(
     user >> bucket_files 
 
     bucket_tfe
-    
-    user >> ec2_tf_client
-    
+        
     user >> ec2_tfe_server
      
     ec2_tfe_server >> [postgresql,

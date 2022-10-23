@@ -2,7 +2,6 @@
 
 The basis of this repository is based on the TFE airgap repository found [here](https://github.com/munnep/TFE_airgap)
 
-
 With this repository you will be able to do a TFE (Terraform Enterprise) airgap installation on AWS with external services for storage in the form of S3 and PostgreSQL. Additionally there will be a Autoscaling group with agents
 
 The Terraform code will do the following steps
@@ -13,12 +12,11 @@ The Terraform code will do the following steps
 - Create a VPC network with subnets, security groups, internet gateway
 - Create a RDS PostgreSQL to be used by TFE
 - Create a EC2 instance on which the TFE airgap installation will be performed
-- Create an EC2 instance on which a Terraform client is installed that you can use to run your code
 - An autoscaling group with agents
 
 # Diagram
 
-![](diagram/diagram-airgap.png)  
+![](diagram/diagram_tfe_agents.png)  
 
 # Prerequisites
 
@@ -28,7 +26,7 @@ Make sure you have a TFE license available for use
 Store this under the directory `files/license.rli`
 
 ## Airgap software
-Download the `.airgap` file using the information given to you in your setup email and place that file under the directory `./airgap`
+Download the `.airgap` file using the information given to you in your setup email and place that file under the directory `./files`
 
 Store this for example under the directory `files/610.airgap`
 
@@ -83,6 +81,10 @@ dns_zonename             = "bg.hashicorp-success.com"                 # DNS zone
 tfe_password             = "Password#1"                               # TFE password for the dashboard and encryption of the data
 certificate_email        = "patrick.munne@hashicorp.com"              # Your email address used by TLS certificate registration
 terraform_client_version = "1.1.7"                                    # Terraform version you want to have installed on the client machine
+agent_token              = ""                                         # Agent token which will be generated for you when creating the TFE instance
+asg_min_size             = 1                                          # minimal number of TFE agents
+asg_max_size             = 3                                          # maximum number of TFE agents
+asg_desired_capacity     = 3                                          # desired nnumber of TFE agents
 public_key               = "ssh-rsa AAAAB3Nza"                        # The public key for you to connect to the server over SSH
 ```
 - Terraform initialize
@@ -103,50 +105,90 @@ Apply complete! Resources: 40 added, 0 changed, 0 destroyed.
 
 Outputs:
 
-ssh_tf_client = "ssh ubuntu@patrick-tfe6-client.bg.hashicorp-success.com"
 ssh_tfe_server = "ssh ubuntu@patrick-tfe6.bg.hashicorp-success.com"
 tfe_appplication = "https://patrick-tfe6.bg.hashicorp-success.com"
 tfe_dashboard = "https://patrick-tfe6.bg.hashicorp-success.com:8800"
 ```
-- Connect to the TFE dashboard. This could take 10 minutes before fully functioning
-![](media/20220516105301.png)   
-- Click on the open button to create your organization and workspaces
+- Start the TFE configuration script. Which will do the following:
+  - create a user named: admin -> Password from variables.auto.tfvars
+  - create an organisation named: test
+  - agent pool named: test-pool
+  - agent authentication token
+  - workspace connected to the agent pool
+
+```
+ssh ubuntu@patrick-tfe6.bg.hashicorp-success.com /bin/bash /tmp/tfe_setup.sh
+```
+- This will show the AGENT_TOKEN
+
+```
+Use this in your Terraform variables as a value for AGENT_TOKEN=7SMgLQzq9yjetw.atlasv1.EGV2giX8SGuoueLyIs6zECughJ4urL14eQlRJ10C5vxAAeykYhZfiVDqBWzg7wU81Js
+```
+- add the value to your `variables.auto.tfvars`
+```
+agent_token              = "7SMgLQzq9yjetw.atlasv1.EGV2giX8SGuoueLyIs6zECughJ4urL14eQlRJ10C5vxAAeykYhZfiVDqBWzg7wU81Js"
+```
+- run terraform apply
+```
+terraform apply
+```
+- Login to your TFE environment
+https://patrick-tfe6.bg.hashicorp-success.com
+- Go to settings -> Agents  
+
+![](media/20221023131924.png)    
+
+## Testing the agents
+
+- Go to the directory test_code
+```
+cd test_cde
+```
+- login to your terraform environment just created
+```
+terraform login patrick-tfe6.bg.hashicorp-success.com
+```
+- Edit the `main.tf` file with your TFE environment
+- Run terraform init
+```
+terraform init
+```
+- run terraform apply
+```
+terraform apply
+```
+- under the admin page -> runs you should see the apply running on an agent  
+
+![](media/20221023133050.png)  
 
 
 
 # TODO
 
-- [] build network according to the diagram
-- [] use standard ubuntu 
-- [] Create an AWS RDS PostgreSQL
-- [] create a virtual machine in a public network with public IP address.
-    - [] firewall inbound are all from user building external ip
-    - [] firewall outbound rules
+
+# Done
+
+- [x] build network according to the diagram
+- [x] use standard ubuntu 
+- [x] Create an AWS RDS PostgreSQL
+- [x] create a virtual machine in a public network with public IP address.
+    - [x] firewall inbound are all from user building external ip
+    - [x] firewall outbound rules
           postgresql rds
           AWS bucket
           user building external ip
-- [] Create an AWS bucket
-- [] create an elastic IP to attach to the instance
-- [] transfer files to TFE virtual machine
+- [x] Create an AWS bucket
+- [x] create an elastic IP to attach to the instance
+- [x] transfer files to TFE virtual machine
       - airgap software
       - license
       - TLS certificates
       - Download the installer bootstrapper
-- [] install TFE
-- [] Create a valid certificate to use 
-- [] Get an Airgap software download
-- [] point dns name to public ip address
-- [] create an auto scaling group with agents
-
-# Done
-
-
-
-
-
-# notes and links
-[EC2 AWS bucket access](https://aws.amazon.com/premiumsupport/knowledge-center/ec2-instance-access-s3-bucket/)
-
+- [x] install TFE
+- [x] Create a valid certificate to use 
+- [x] Get an Airgap software download
+- [x] point dns name to public ip address
+- [x] create an auto scaling group with agents
 
 
 
