@@ -6,6 +6,10 @@ variable "region" {
   description = "region to create the environment"
 }
 
+variable "agent_token" {
+  description = "agent secret token"
+}
+
 variable "vpc_cidr" {
   description = "which private subnet do you want to use for the VPC. Subnet mask of /16"
 }
@@ -53,4 +57,16 @@ variable "dns_zonename" {
 
 variable "certificate_email" {
   description = "email address to register the certificate"
+}
+
+variable "asg_min_size" {
+  description = "Autoscaling group minimal size"
+}
+
+variable "asg_max_size" {
+  description = "Autoscaling group maximal size"
+}
+
+variable "asg_desired_capacity" {
+  description = "Autoscaling group running number of instances"
 }
