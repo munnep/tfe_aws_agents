@@ -58,7 +58,7 @@ git clone https://github.com/munnep/tfe_aws_agents.git
 - Go to the directory  
 ```sh
 cd tfe_aws_agents
-```sh
+```
 - Set your AWS credentials
 ```
 export AWS_ACCESS_KEY_ID=
