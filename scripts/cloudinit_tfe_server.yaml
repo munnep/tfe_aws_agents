@@ -13,7 +13,7 @@ write_files:
           "LicenseFileLocation":               "/tmp/${filename_license}",
           "LicenseBootstrapAirgapPackagePath": "/tmp/${filename_airgap}"
       }
-    permissions: '0750'
+    permissions: '0640'
     path: /etc/replicated.conf
   - content: |
       {
@@ -55,9 +55,10 @@ write_files:
               "value": "${region}"
           }
       }
-    permissions: '0750'
+    permissions: '0640'
     path: /tmp/tfe_settings.json 
   - content: |
+      #!/usr/bin/env bash
       # installation script for software
       # first is Alvaro
       cat >> /home/ubuntu/.ssh/authorized_keys <<EOF
@@ -194,6 +195,7 @@ write_files:
     permissions: '0777'
     path: /tmp/tfe_setup.sh 
   - content: |
+      #!/usr/bin/env bash
       # Download all the software and files needed
       apt-get -y install awscli
       aws s3 cp s3://${tag_prefix}-software/${filename_airgap} /tmp/${filename_airgap}
@@ -214,6 +216,7 @@ write_files:
     permissions: '0750'
     path: /tmp/download_and_unpack_software.sh 
   - content: |
+      #!/usr/bin/env bash
       pushd /opt/tfe
       sudo bash ./install.sh airgap private-address=${tfe-private-ip}
     permissions: '0750'
