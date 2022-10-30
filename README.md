@@ -55,7 +55,7 @@ The repo assumes you have no certificates and want to create them using Let's En
 ```sh
 git clone https://github.com/munnep/tfe_aws_agents.git
 ```
-- Go to the directory
+- Go to the directory  
 ```sh
 cd tfe_aws_agents
 ```sh
