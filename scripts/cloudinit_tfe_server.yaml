@@ -13,7 +13,7 @@ write_files:
           "LicenseFileLocation":               "/tmp/${filename_license}",
           "LicenseBootstrapAirgapPackagePath": "/tmp/${filename_airgap}"
       }
-    permissions: '0750'
+    permissions: '0640'
     path: /etc/replicated.conf
   - content: |
       {
@@ -55,7 +55,7 @@ write_files:
               "value": "${region}"
           }
       }
-    permissions: '0750'
+    permissions: '0640'
     path: /tmp/tfe_settings.json 
   - content: |
       # installation script for software
