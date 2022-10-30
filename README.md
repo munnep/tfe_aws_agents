@@ -2,7 +2,7 @@
 
 The basis of this repository is based on the TFE airgap repository found [here](https://github.com/munnep/TFE_airgap)
 
-With this repository you will be able to do a TFE (Terraform Enterprise) airgap installation on AWS with external services for storage in the form of S3 and PostgreSQL. Additionally there will be a Autoscaling group with agents
+With this repository you will be able to do a TFE (Terraform Enterprise) airgap installation on AWS with external services for storage in the form of S3 and PostgreSQL. Additionally there will be a Autoscaling group with TFE agents
 
 The Terraform code will do the following steps
 
@@ -119,7 +119,7 @@ tfe_dashboard = "https://patrick-tfe6.bg.hashicorp-success.com:8800"
 ```
 ssh ubuntu@patrick-tfe6.bg.hashicorp-success.com /bin/bash /tmp/tfe_setup.sh
 ```
-- This will show the AGENT_TOKEN
+- The output of the configuration script will show the AGENT_TOKEN
 
 ```
 Use this in your Terraform variables as a value for AGENT_TOKEN=7SMgLQzq9yjetw.atlasv1.EGV2giX8SGuoueLyIs6zECughJ4urL14eQlRJ10C5vxAAeykYhZfiVDqBWzg7wU81Js
@@ -141,7 +141,7 @@ https://patrick-tfe6.bg.hashicorp-success.com
 - See the agents that are now available for your usage. Go to settings -> Agents  
 
 ![](media/20221023131924.png)    
-- You are now able to use workspace with these agents. Testing example [here](#testing)
+- You are now able to use workspaces with these agents. Testing example [here](#testing)
 - Remove everything by using terraform destroy
 ```
 terraform destroy
@@ -157,7 +157,19 @@ cd test_code
 ```
 terraform login patrick-tfe6.bg.hashicorp-success.com
 ```
-- Edit the `main.tf` file with your TFE environment
+- Edit the `main.tf` file with the hostname of your TFE environment
+```
+terraform {
+  cloud {
+    hostname = "patrick-tfe6.bg.hashicorp-success.com"
+    organization = "test"
+
+    workspaces {
+      name = "test-agent"
+    }
+  }
+}
+```
 - Run terraform init
 ```
 terraform init
