@@ -81,7 +81,7 @@ dns_zonename             = "bg.hashicorp-success.com"                 # DNS zone
 tfe_password             = "Password#1"                               # TFE password for the dashboard and encryption of the data
 certificate_email        = "patrick.munne@hashicorp.com"              # Your email address used by TLS certificate registration
 terraform_client_version = "1.1.7"                                    # Terraform version you want to have installed on the client machine
-agent_token              = ""                                         # Agent token which will be generated for you when creating the TFE instance
+agent_token              = ""                                         # Leave empty on first apply. Agent token which will be generated for you when starting the TFE configuration script. 
 asg_min_size             = 1                                          # minimal number of TFE agents
 asg_max_size             = 3                                          # maximum number of TFE agents
 asg_desired_capacity     = 3                                          # desired nnumber of TFE agents
@@ -128,25 +128,30 @@ Use this in your Terraform variables as a value for AGENT_TOKEN=7SMgLQzq9yjetw.a
 ```
 agent_token              = "7SMgLQzq9yjetw.atlasv1.EGV2giX8SGuoueLyIs6zECughJ4urL14eQlRJ10C5vxAAeykYhZfiVDqBWzg7wU81Js"
 ```
-- run terraform apply
+- run terraform apply. This will create an autoscaling group with TFE agents.
 ```
 terraform apply
 ```
+output
+```
+Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
+```
 - Login to your TFE environment
 https://patrick-tfe6.bg.hashicorp-success.com
-- Go to settings -> Agents  
+- See the agents that are now available for your usage. Go to settings -> Agents  
 
 ![](media/20221023131924.png)    
+- You are now able to use workspace with these agents. Testing example [here](#testing)
 - Remove everything by using terraform destroy
 ```
 terraform destroy
 ```
 
-## Testing the agents
+## Testing
 
 - Go to the directory test_code
 ```
-cd test_cde
+cd test_code
 ```
 - login to your terraform environment just created
 ```
@@ -160,6 +165,22 @@ terraform init
 - run terraform apply
 ```
 terraform apply
+```
+output
+```
+Plan: 3 to add, 0 to change, 0 to destroy.
+
+
+Do you want to perform these actions in workspace "test-agent"?
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+  Enter a value: yes
+
+null_resource.previous: Creation complete after 0s [id=2453745097537198537]
+time_sleep.wait_120_seconds: Creating...
+time_sleep.wait_120_seconds: Still creating... [10s elapsed]
+time_sleep.wait_120_seconds: Still creating... [20s elapsed]
 ```
 - under the admin page -> runs you should see the apply running on an agent  
 
