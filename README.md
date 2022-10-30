@@ -88,7 +88,7 @@ asg_desired_capacity     = 3                                          # desired 
 public_key               = "ssh-rsa AAAAB3Nza"                        # The public key for you to connect to the server over SSH
 ```
 - Terraform initialize
-```sj
+```sh
 terraform init
 ```
 - Terraform plan
@@ -131,9 +131,9 @@ agent_token              = "7SMgLQzq9yjetw.atlasv1.EGV2giX8SGuoueLyIs6zECughJ4ur
 - run terraform apply. This will create an autoscaling group with TFE agents.
 ```sh
 terraform apply
-```sh
-output
 ```
+output
+```sh
 Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
 ```
 - Login to your TFE environment
