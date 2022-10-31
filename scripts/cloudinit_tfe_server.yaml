@@ -100,7 +100,6 @@ write_files:
       
       echo $SWAP
       echo $DOCKER
-      echo $TFE
       
       # swap
       # if SWAP exists
